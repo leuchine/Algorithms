@@ -1,35 +1,24 @@
-v=4
-graph=[[] for i in range(v)]
+import heapq
 
-graph[0]+=[(1,1),(2,2)]
-graph[1]+=[(3,3)]
-graph[2]+=[(3,4)]
+graph = {
+  0: { 1:2, 2:4, 3:1 },
+  1: { 2:1, 3:3 },
+  2: { 4: 7},
+  3: { 2: 2 },
+  4: { 0:2, 3:3 }, 
+  5: {}
+}
 
-Q=[i for i in range(v)]
-key=[1000 for i in range(v)]
-key[0]=0
-pi=[0 for i in range(v)]
+#[0, 2, 3, 1, 10, -1]
 
-path=[]
-def finMin(Q, key):
-    min=1000
-    i=1000
-    for index, value in enumerate(key):
-        if value < min and index in Q:
-            i=index
-            min=value
-    return i
+visited={}
+min_queue=[(0, 0)]
 
-while Q!=[]:
-    i=finMin(Q,key)
-    Q.remove(i)
-    if i!=0:
-        path+=[(pi[i],i)]
-    for j, weight in graph[i]:
-        if key[j]>key[i]+weight:
-            key[j]=key[i]+weight
-            pi[j]=i
-print(path)
-
-    
-
+while len(min_queue)>0:
+	cost, node=heapq.heappop(min_queue)
+	if node not in visited:
+		visited[node]=cost
+		for neighbor, weight in graph[node].items():
+			if neighbor not in visited:
+				heapq.heappush(min_queue, (cost+weight, neighbor))
+print(visited)
